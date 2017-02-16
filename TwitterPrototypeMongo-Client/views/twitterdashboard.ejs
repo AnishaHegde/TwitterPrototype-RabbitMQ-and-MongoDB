@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Dashboard</title>
+
+<!-- Latest compiled and minified CSS --> 
+<link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> 
+<!-- jQuery library --> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> 
+<!-- Latest compiled JavaScript --> 
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<!-- AngularJs library --> 	
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+<style>
+
+	body {
+    margin: 0;
+    height: 100%;
+	}
+	ul {
+	    list-style-type: none;
+	    margin: 0;
+	    padding: 0;
+	    overflow: hidden;  
+	}
+	
+	li {
+		float : left;
+	    border-right: 1px;
+	}
+	
+	li:last-child {
+	    border-right: none;
+	}
+	
+	li a {
+	    display: block;
+	    color: gray;
+	    text-align: center;
+	    padding: 14px 16px;
+	    text-decoration: none;
+	}
+	
+	#searchBar {
+		border-radius: 25px;
+		background-color: #f0f5f5;
+	}
+	
+	#submitSearch {
+		border: none;
+		margin-bottom: 23px;
+	}
+	
+	#logout {
+		border-radius: 10px;
+		background-color: #f0f5f5;
+		margin-bottom: 25px;
+	}
+	
+	#tweetButton{
+		margin-left: 7px;
+		margin-bottom: 23px;
+	}
+	
+	#dashboardBody {
+		background-color: #e6f5ff;
+		height:1500px;
+		overflow: hidden;
+	}
+	
+	#minimizedProfile {
+		margin-top: 10px;
+		border-radius: 8px;
+		background-color: white;
+	}
+	
+	#tweets {
+		margin-top: 10px;
+		background-color: white;
+		border-radius: 8px;
+	}
+	
+	#twitterCopyrightText {
+		margin-top: 10px;
+		border-radius: 6px;
+		background-color: white;
+	}
+	
+	#profilePicture
+	{ 
+		 left: 20px; 
+		 top: 60px; 
+		 position: absolute; 
+		 width: 70px;
+		 height: 70px;
+		 z-index:139;
+		 border: thin;
+		 border-color: #f0f5f5;
+		 border-radius: 5px;
+		 border-style: outset;
+	} 
+	
+	#profileHeader {
+		background-color: #0084B4;
+		height: 75px;
+		border-radius: 5px;
+	}
+	
+	#profileBodyWhite {
+		border-radius: 5px;
+		background-color: white;
+		height: 75px;
+	}
+	
+</style>
+
+</head>
+<body ng-app="dashboardApp">
+
+<!-- Dashboard Navigation Bar -->
+<div class="container">
+	<div role="navigation" class="column">
+	
+		<div class="col-md-6">
+			<ul style="list-style-position: inside;" role="tablist" class="nav nav-pills">
+				<li class="homeTab">
+					<a role="button" href="#">
+						<span class="glyphicon glyphicon-home"></span> 
+						<span>Home</span>
+					</a>
+				</li>
+				<li class="momentsTab disabled">
+					<a role="button">
+						<span class="glyphicon glyphicon-flash"></span>
+						<span>Moments</span>
+					</a>
+				</li>
+				<li class="notificationsTab disabled">
+					<a role="button">
+						<span class="glyphicon glyphicon-bell"></span>
+						<span>Notifications</span>
+					</a>
+				</li>
+				<li class="messagesTab disabled">
+					<a role="button" href="#">
+						<span class="glyphicon glyphicon-envelope"></span>
+						<span>Messages</span>
+					</a>
+				</li>			
+			</ul>	
+		</div>	
+		
+		<div class="col-md-2">
+			<img alt="" src="/images/Twitterbird.png" style="padding: 15px">
+		</div>
+		
+		<div class="col-md-4 input-group add-on" align="right">
+			<!-- add search form -->
+	            <form class="navbar-form navbar-right" role="search">
+	                <div class="input-group">
+	                    <input type="text" class="form-control" placeholder="Search Twitter" id="searchBar">
+	                    <span class="input-group-btn">
+	                        <button type="submit" class="btn btn-default" id="submitSearch">
+	                        	<span class="glyphicon glyphicon-search"></span>
+	                        </button>
+	                    </span>
+	                    
+	                    <span class="input-group-btn" ng-controller="logoutController">
+	                    	<button type="submit" class="btn btn-default" id="logout" ng-click="logout()">Logout</button>
+                    	</span>   
+	                    
+	                    <span class="input-group-btn" style="color: blue;">
+		                    <a href="#">
+		                    	<img alt="" src="/images/TweetCapture.png" id="tweetButton">
+		                    </a>
+	                    </span>
+	                </div>
+	            </form>
+		</div>
+	</div>
+</div>
+
+<!-- Dashboard Body -->
+<div class="container" ng-controller="dashboardController">
+	<div id="dashboardBody" class="row">
+	
+		<div class="col-md-3" align="center">
+			<div id="minimizedProfile">
+				<!-- Profile Header -->
+					<div id="profileHeader"></div>
+					<div id="profileBodyWhite">
+						<strong style="color:#293d3d;">&nbsp;&nbsp;{{firstName | lowercase}}&nbsp;{{lastName | lowercase}}</strong>
+						<p style="color:gray">{{userHandle}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+					</div>
+				<!-- Profile Picture -->
+					<img alt="Profile Picture" src="/images/displayPic.jpg" id="profilePicture">
+			</div>
+			
+			<div id="minimizedProfile">
+				<h4 align="left" style="color:gray;">Trending Hashtags</h4>
+				
+				<table class="table" ng-repeat="htData in displayTweets" style="table-layout: fixed; width: 100%">
+				    	
+				      <tr style="margin-bottom: 5px">
+				        <td align="left" style="word-wrap: break-word;color:#0099e6">{{htData.hashtagData}}</td>
+				      </tr>
+				      
+			    </table>	
+			</div>	
+		</div>
+		
+		<div class="col-md-6" align="center">
+			<div id="tweets" ng-init="loadTweets()">
+				
+				<table class="table" ng-repeat="tweet in displayTweets">
+				    
+				      <tr>
+				        <td align="left" style="color:gray">
+				        	<div ng-hide=tweet.isCreator>
+					        	<strong style="color:#293d3d">{{firstName | lowercase}}&nbsp;{{lastName | lowercase}}&nbsp;Retweeted</strong><br>
+					        	<strong style="color:#293d3d">{{tweet.originalFname | lowercase}}&nbsp;{{tweet.originalLname | lowercase}}</strong>
+					        	&nbsp;{{tweet.userHandle}}&nbsp;&nbsp;{{tweet.currentTimestamp | date:'medium'}}
+				        	</div>
+					        <div ng-show=tweet.isCreator>
+					        	<strong style="color:#293d3d">{{tweet.fName | lowercase}}&nbsp;{{tweet.lName | lowercase}}</strong>
+					        	&nbsp;{{tweet.originaluserHandle}}&nbsp;&nbsp;{{tweet.currentTimestamp | date:'medium'}}
+				        	</div>				     
+				        </td>				        
+				      </tr>
+				    
+				      	
+				      <tr>
+				        <td align="left">{{tweet.tweetData}}</td>				       
+				      </tr>
+				      
+				      <tr>
+				        <td align="left"><a class="glyphicon glyphicon-retweet" ng-click="retweet(tweet.tweetId)"></a></td>
+				      </tr>
+				      
+			    </table>
+				
+			</div>
+		</div>
+		
+		<div class="col-md-3" align="center">
+			<div id="twitterCopyrightText">
+				<p style="word-wrap: break-word;">&copy; 2016 TwitterAbout HelpTerms Privacy Cookies Ads info Brand Blog Status Apps Jobs Advertise Businesses Media Developers</p>
+			</div>
+		</div>
+	</div>
+</div>	
+
+<!-- Angular JS code -->
+
+<script type="text/javascript">
+	
+	var tweetApp = angular.module('dashboardApp', []);
+	
+	//Logout
+	tweetApp.controller('logoutController', function($scope, $http, $window){
+		
+		$scope.logout = function() {
+			//HTTP Post request to insert tweet and hashtags in Database
+			
+			$http({
+				method : "GET",
+				url    : '/logout',
+			}).success(function(res) {
+				$window.location.href = "/";
+			}).error(function(error) {
+					alert("Error: " + error);
+			});
+			//end HTTP GET request
+		};
+		
+	});//end Logout Tweets
+	
+	var hashtags = [];
+	var count = 0;
+	
+
+	tweetApp.controller('dashboardController', function($scope, $http, $window){
+		
+		$scope.loadTweets = function() {
+			//HTTP Post request to insert tweet and hashtags in Database
+			
+			$http({
+				method : "GET",
+				url    : '/retrieveAllTweets',
+			}).success(function(res) {
+				
+				$scope.firstName = res.fName;
+				$scope.lastName = res.lName;
+				$scope.displayTweets = res.tweetsByFollowing;
+				$scope.userHandle = res.uhandle;
+				
+			}).error(function(error) {
+					//alert("Error: " + error);
+			});
+			//end HTTP POST request
+		};//end Load Tweets
+		
+		$scope.retweet = function(tweetId) {
+			//HTTP Post request to insert tweet and hashtags in Database
+			
+			$http({
+				method : "POST",
+				url    : '/addRetweet',
+				data   : {
+						  tweetId:tweetId
+				}
+			}).success(function(res) {				
+				$window.location.href = "/dashboard";				
+			}).error(function(error) {
+				$window.location.href = "/dashboard";
+			});
+			//end HTTP POST request
+		};//end retweet
+		
+	});
+	
+</script>
+
+</body>
+</html>

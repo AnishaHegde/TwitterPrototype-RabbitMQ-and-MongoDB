@@ -1,0 +1,165 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+		<meta charset="utf-8"> 
+		
+		<title>Sign Up Page</title>
+		<!-- Latest compiled and minified CSS --> 
+			<link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> 
+		<!-- jQuery library --> 
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> 
+		<!-- Latest compiled JavaScript --> 
+			<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<!-- AngularJs library --> 	
+			<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+	    
+	    <style>
+	    
+	    	#header {
+	    		height: 70px;
+	    		margin: 0px
+	    	}
+	    	
+	    	#secondSection {
+	    		height: 50px;
+	    	}
+	    	
+	    	#twitterBirdHome{
+	    		
+
+	    		position: absolute; 
+	    		width: 50px;
+	    		height: 40px;
+	    		z-index:139;
+	    	}
+	    	
+	    
+	    </style>
+ 
+</head>
+	
+<body ng-app="signUp_App" ng-controller="signUp_controller">
+	
+<div id="header" style="background-color: #33ccff" align="center" class="container-fluid">
+	<img alt="Profile Picture" src="/images/twitterHome.png" id="twitterBirdHome" align="middle">
+</div>
+	
+<div id="secondSection"></div>
+	
+	
+<div class="container-fluid row">
+	
+	<div id="leftSection" class="col-md-4"></div>
+	
+	<div name="middleSection" align="center" class="col-md-4">
+
+		<h2>Join Twitter today.</h2>
+		<form name="signUpForm" id="signUpForm" role="form"> 
+
+		    	<div class="form-group" align="center">
+		    		<input class="form-control" type="email" name="email" ng-model="signUp.email" size=20 required placeholder="Email">
+		    	</div>
+		    	<div class="form-group" align="center">
+		    		<input class="form-control" type="text" name="firstName" ng-model="signUp.firstName" required title="This field is mandatory" placeholder="First Name">
+		    	</div>	  
+		    	<div class="form-group"> 
+		    		<input class="form-control" type="text" name="lastName" ng-model="signUp.lastName" required title="This field is mandatory" placeholder="Last Name">
+		    	</div>
+		    	<div class="form-group">	 		  	 
+			  		<input class="form-control" type="password" name="password" ng-model="signUp.password" size=16 required  autocomplete="off" title="This field is mandatory" placeholder="Password">    
+			  	</div>
+			  	<div class="form-group">
+			  		<input class="form-control" type="text" name="userHandle" ng-model="signUp.userHandle" required title="This field is mandatory" placeholder="User Handle">
+			  	</div>
+			  	<div class="form-group">
+			  		<input class="form-control" type="text" name="dob" id="dob" ng-model="signUp.dob" title="Please enter a valid date" placeholder="Date of Birth as yyyy-mm-dd">
+			  	</div>
+			  	<div class="form-group">
+			  		<input class="form-control" type="text" name="usrTel" pattern="\d{10}" ng-model="signUp.usrTel" title="Phone number format 9999999999" placeholder="Phone Number (optional)">
+			  	</div>	
+			  	<div class="form-group">
+			  		<input class="form-control" type="text" name="userLocationCity" ng-model="signUp.locationCity" placeholder="City (optional)">
+			  	</div>
+			  	<div class="form-group">
+		  			<input class="form-control" type="text" name="userLocationState" ng-model="signUp.locationState" placeholder="State (optional)">
+		  		</div>
+			  	<div>
+			  	
+			  	<div class="alert alert-danger" ng-hide="invalid_signup">
+			  		<strong>User already exists</strong>
+				</div>
+				<div class="alert alert-danger" ng-hide="unexpected_error">
+					<strong>Unexpected error, try again</strong>
+				</div>
+			  		<input ng-click="signUpMethod()" class="form-control btn-primary" type="submit" value="Submit" style="background-color: #33ccff; color:white; font-size: medium;">  
+			  	</div>
+	 	</form>
+ 	</div>   
+ 	
+ 	<div id="rightSection" class="col-md-4"></div>
+</div>	
+
+ <!-- Angular module -->
+ <script>	
+ 		
+		var myApp = angular.module("signUp_App", []); 
+		
+		myApp.controller("signUp_controller",function ($scope, $http, $window) {
+			
+			
+			$scope.invalid_signup = true;
+			$scope.unexpected_error = true;
+			
+			$scope.signUpMethod = function(){			
+						
+			var serverData = $scope.signUp;
+				
+				$http({
+					method  : 'POST',
+					url		: '/signUpUser',
+					data    : {"serverData" : serverData}
+					}).success(function(data) {
+						
+						if (data.signup == "Fail") {	
+							$scope.unexpected_error = false;
+							$scope.invalid_signup = true;
+						}
+						else if (data.signup == "Exists"){
+							$scope.invalid_signup = false;
+							$scope.unexpected_error = true;
+						}
+						else if (data.signup == "Success")
+							window.location.assign("/login");
+						
+					}).error(function(error) {
+						alert("Inside error function of signup");
+						$scope.unexpected_error = false;
+						$scope.invalid_login = true;
+					});
+				
+					/*.then(function(res){
+						//if(res.statusCode == 200){
+						if(res.signup == "Success"){
+							$window.location.href = '/login';
+						}
+						else {
+							//if(res.statusCode == 400){
+							if(res.signup == "Exists"){
+								$scope.invalid_signup = false;
+								$scope.unexpected_error = true;
+							}
+							else{
+								$scope.unexpected_error = false;
+								$scope.invalid_signup = true;
+							}
+						}
+				});*/
+				
+				
+			};
+		});
+
+</script>
+ 	
+</body> 
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"> 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log In Page</title>
+<!-- Latest compiled and minified CSS --> 
+	<link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> 
+<!-- jQuery library --> 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> 
+<!-- Latest compiled JavaScript --> 
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<!-- AngularJs library --> 	
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+<!-- Loading the AngularJS file from /public/angularJS folder -->
+<script src="angularjs/login.js"></script>
+
+<style>
+
+	#header {
+	    		height: 70px;
+	    		margin: 0px
+	    	}
+	    	
+	#secondSection {
+				height: 50px;
+	    	}
+	
+	#twitterBirdHome{
+		
+		position: absolute; 
+		width: 50px;
+		height: 40px;
+		z-index:139;
+	}
+
+</style>
+
+</head>
+
+
+
+<body ng-app="login" ng-controller="login">
+
+<div id="header" class="container-fluid" style="background-color: #33ccff" align="center">
+	<img alt="Profile Picture" src="/images/twitterHome.png" id="twitterBirdHome" align="middle">
+</div>
+
+<div id="secondSection"></div>
+
+
+<div class="row container-fluid">
+	
+<div id="leftSection" class="col-md-4"></div>	
+	
+<div name="middleSection" align="center" class="col-md-4">
+
+		<h3 style="color: gray;">Log in to Twitter</h3>
+		<form role="form">		
+			<div class="form-group" style="margin: 10px;">
+				<input class="form-control" type="text" name="username" ng-model="username" placeholder="Email" autofocus>
+			</div>
+			
+			<div class="form-group" style="margin: 10px;">
+				<input class="form-control" type="password" name="password" ng-model="password" placeholder="Password">
+			</div>
+
+			<div class="col-md-12">
+				<div class="alert alert-danger" ng-hide="invalid_login">
+					<strong>Incorrect username or password</strong>
+				</div>
+				<div class="alert alert-danger" ng-hide="unexpected_error">
+					<strong>Unexpected error, try again</strong>
+				</div>
+					
+				<input type="submit" class=" form-control" style="background-color: #33ccff; color:white; font-size: medium;" ng-click="submit();" value="Login" />
+			</div>
+		</form>		
+</div>
+
+<div id="rightSection" class="col-md-4"></div>
+
+</div>
+
+</body>
+</html>

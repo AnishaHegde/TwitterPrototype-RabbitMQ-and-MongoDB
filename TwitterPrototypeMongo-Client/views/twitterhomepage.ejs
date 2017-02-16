@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Twitter</title>
+
+<!-- Latest compiled and minified CSS --> 
+<link rel="stylesheet"href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> 
+<!-- jQuery library --> 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script> 
+<!-- Latest compiled JavaScript --> 
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<!-- AngularJs library --> 	
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+
+<style> 
+
+#header {
+    background-color:#33ccff;
+    height: 100px;
+}
+
+#body {
+    background-color:#33ccff;
+    height: 100px;
+}
+
+#line1 {
+	color: white;
+	font-size: 35px;
+}
+
+#line2 {
+	color: #f2f2f2;
+	font-size: 20px;
+}
+
+button {
+    border: 2px solid #a1a1a1;
+    padding: 10px 40px; 
+    background: #dddddd;
+    width: 200px;
+    border-radius: 15px;
+    margin-right: 15px;
+    margin-top: 15px;
+    border-color: #d6f5f5;
+    background-color: #33ccff;
+    color: white;
+    float: right;
+}
+
+#twitterBirdHome{
+	
+	left: 50px; 
+	top: 20px; 
+	position: absolute; 
+	width: 50px;
+	height: 50px;
+	z-index:139;
+}
+</style>
+
+</head>
+<body ng-app="homeApp">
+
+	<img alt="Profile Picture" src="/images/twitterHome.png" id="twitterBirdHome">
+
+	<div id="header" class="btn-group-lg" align="right">
+	  <button type="button" class="btn-lg" type="submit" ng-controller="signUpController" ng-click="signUp()">Sign up</button>
+	 <button type="button" class="btn-lg" type="submit" ng-controller="logInController" ng-click="logIn()">Log In</button>
+	</div>
+	
+	<!-- <div id="header" class="btn-group-lg" align="right">
+	  <button type="button" class="btn-lg" type="submit">Sign up</button>
+	  <button type="button" class="btn-lg" type="submit">Log In</button>
+	</div> -->
+
+	<div id="body" align="center">
+		<p id="line1">See what&apos;s happening right now.</p>
+		<p id="line2">Find community, conversation and inspiration about the things you love.</p>
+	</div>
+
+	<script>
+		var app = angular.module("homeApp", []);
+		
+		app.controller('logInController', loginCallback);
+
+		function loginCallback($scope, $http, $window) {
+			
+			$scope.logIn = function(){
+				$http({
+		        	method	: "GET",
+		        	url		: "/loginRoute",
+			    }).then(function(response) {
+			        $window.location.href = '/login';
+			    });  
+				
+			};
+		}
+		
+		
+		app.controller('signUpController', signUpCallback);
+
+		function signUpCallback($scope, $http, $window) {
+			
+			$scope.signUp = function(){
+				
+				$http({
+		        	method	: "GET",
+		        	url		: "/signUpRoute",
+			    }).then(function(response) {
+			        $window.location.href = '/signup';
+			    });  
+				
+			};
+		}
+		
+	</script>
+	
+</body>
+</html>
